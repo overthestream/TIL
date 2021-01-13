@@ -1,0 +1,146 @@
+# 컴포넌트
+  리액트 앱의 인터페이스에서 유저가 볼 수 있는 요소는 여러 가지 컴포넌트로 구성되어 있음 
+  데이터가 주어졌을 때 이에 맞춰 UI를 만들어주고, 라이프사이클 API를 이용해 컴포넌트가 화면에서 나타날 때, 사라질 때, 변화가 일어날 때 주어진 작업을 처리할 수 있음
+  임의 메소드를 만들어 특별한 기능을 붙여줄 수도 있음
+
+# 클래스형 컴포넌트
+  함수형 컴포넌트에 더해 컴포넌트를 선언하는 방식 
+  ex >
+    import React, { Component } from 'react'
+
+    class App extends Component {
+      render() {
+        const name = 'react'
+        return (
+          <div className = 'react'>
+            {name}
+          </div>
+        )
+      }
+    }
+
+    export default App
+  클래스형 컴포넌트는 state, 라이프사이클, 메소드 정의 기능 이용 가능
+
+  ## JS의 class
+    function Dog(name) {
+      this.name = name
+    }
+    Dog.prototype.say() = function() {
+      console.log(this.name + ': 멍멍')
+    }
+    var dog = new Dog('검둥이')
+    dog.say
+  
+  ->
+    class Dog {
+      constructor(name) {
+        this.name = name
+      }
+      say() {
+        console.log(this.name + ': 멍멍')
+      }
+    }
+    const dog = new Dog('검둥이')
+    dog.say
+
+  클래스형 컴포넌트는 무조건 render 메소드가 있어야 하며, render 함수는 렌더링할 JSX를 반환해야 함 
+  함수형은 성능과 파일 크기, 난이도 면에서 약간의 이점이 있고, state와 라이프사이클 API는 Hooks기능을 이용하여 사용 가능 
+
+# 컴포넌트 만들어보기
+  ../hello-react/src/MyComponent.js -export-> App.js
+
+# props
+  = properties 의 약어 
+  컴포넌트 속성을 설정할 때 사용하는 요소 
+  해당 컴포넌트의 부모 컴포넌트에서 설정 가능 
+  컴포넌트 함수에서 파라미터로 받아올 수도 있음 
+    ex > 
+      const App = () => {
+        return (
+          <MyComponent name = "React" />
+        )
+      }
+
+      const MyComponent = props => {
+        return (
+          <div>My name is {props.name}.</div>
+        )
+      }
+
+      // defaultProps: 파라미터가 없을 떄 기본값
+      MyComponent.defaultProps = {
+        name: 'default'
+      }
+  이런 식으로 
+
+  # props.children : 컴포넌트 태그 사이의 내용을 보여주는 props 
+    ex >
+      <MyComponent>React</MyComponent>
+    이런 식으로 하면 MyComponent에서 props.children 값은 React가 됨 
+  # props에 dot 연산자 쓰지 않는 법 
+    JSX 들어가기 전에 ES6 비구조화 할당 문법을 사용하여 내부 값 추출 가능 
+      const { name, children } = props 
+    -> props.name, props.children 이 아닌 name, children으로 사용 가능 
+    -> # 파라미터에서도 사용 가능 
+      ex > const MyComponent = ({name, children}) => { } 이런 식으로!!
+  # 필수 props와 props의 타입 지정하기 : propTypes
+    import PropTypes from 'prop-types'
+    (...)
+    MyComponent.propTypes = {
+      name: PropTypes.string
+      favoriteNumber: PropTypes.number.isRequired // 필수 props 지정 !!
+    } 
+  # 클래스형 컴포넌트의 props
+    render 함수에서 this.props 이용. 
+    defaultProps와 PropTypes 똑같이 이용 가능 
+    or 
+    class 내부에서 
+      static defaultProps = {
+        name: 'default'
+      }
+    이런 식도 가능 
+
+# state 
+  컴포넌트 내부에서 바뀔 수 있는 값 (props는 read - only)
+  > 클래스형 컴포넌트 : state
+    ../hello-react/src/Counter.js
+    constructor 메소드 이용 
+      super(props) 필수 
+      props에서 dot 빼기 처럼 JSX 전에 빼 주기 
+    다른 방법 
+      그냥
+        state = {
+          number: 0
+        }
+      이것만 해도 됨
+    this.setState 한 이벤트 처리에서 setState를 여러번 한다고 해서 바로바로 반영되는 것이 아님 
+      -> 객체 대신 함수를 인자로 넣기
+        this.setState((prevState,props) => {
+          return {
+            number: prevState.number + 1
+          }
+        })
+    setState 끝난 후 특정 작업 실행하기 (콜 백 함수)
+      this.setState(
+        (prevState, props) => {
+          return {
+            number: prevState.number +1
+          }
+        },
+        () => {
+          console.log('number++')
+        }
+      )
+  > 함수형 컴포넌트 : useState 함수  
+    ../hello-react/src/Say.js
+    Hooks + useState
+    # 배열 비구조화 할당 
+        const array = [1, 2]
+        const [one, two] = array
+      이렇게 하면 one === array[0], two === array[1]
+      props, state 와 같다 ~  
+    useState 함수의 인자에는 state의 초깃값을 넣어준다. 여기서는 굳이 객체가 아니어도 됨
+    함수 호출 시 배열이 반환되는데, 첫번째 요소는 state, 두번쨰 요소는 setter 함수 
+    여러 번 사용해라 이말이죠
+  클래스든 함수든 state 사용 시 setter 함수를 사용할 것 

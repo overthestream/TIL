@@ -1,0 +1,59 @@
+# 라이프사이클
+  모든 리액트 컴포넌트에는 라이프사이클(수명 주기)가 존재
+  컴포넌트의 수명은 페이지에 렌더링되기 전인 준비 과정에서부터 시작하여 페이지가 사라질 때 끝남 
+  안드로이드 액티비티의 생명주기처럼 컴포넌트도 생성, 업데이트, 소멸 등 각각의 라이프사이클에 따라 작업을 해 줄 때 사용
+  마운트, 업데이트, 언마운트 총 세가지로 나뉨
+  > 마운트 
+    : DOM이 생성되고 웹 브라우저 상에 나타나는 것 
+    마운트 시 호출 메소드 
+    : 컴포넌트 만들기 > constructor > getDerivedStateFromProps > render > conponentDidMount
+  > 업데이트 
+    > props가 바뀔 때
+    > state가 바뀔 때
+    > 부모 컴포넌트가 리렌더링될 때
+    > this.forceUpdate로 강제로 렌더링을 트리거할 때 
+    업데이트 시 호출 메소드 
+    : 위의 3가지 상황(forceUpdate 제외) > getDerivedStateFromProps > shouldComponentUpdate > true > (forceUpdate) > render > getSnapshotBeforeUpdate > DOM 변화 > conponentDidUpdate
+  > 언마운트 
+    : 컴포넌트를 DOM에서 제거하는 것 
+    언마운트 시 호출 메소드 
+      : 언마운트 하기 > componentWillUnmount 
+
+# 라이프사이클 메소드
+  총 9가지 : Will 접두사가 붙은 메소드는 어떤 작업 전에 실행, Did 접두사가 붙은 메소드는 어떤 작업 후에 실행됨 
+  오버라이드 해서 써라 
+  > render() 
+    컴포넌트 모양을 정의하는 필수 메소드 
+    이 메소드 안에서 this.props 와 this.state에 접근 가능 
+    리액트(JSX) 요소를 반환
+    이벤트 핸들링이 아닌 곳에서 setState를 사용하면 안되고, 브라우저의 DOM에도 접근해서는 안됨. 
+      이것은 componentDidMount에서 처리 
+  > constructor()
+    컴포넌트의 생성자 메소드, 컴포넌트 만들 때 처음으로 실행 
+    초기 state값 정할 수 있음
+  > getDerivedStateFromProps()
+    props로 받아온 값을 state에 동기화시키는 용도 
+      static getDerivedStateFromProps(nextProps, prevState){
+        if ( nextProps.value !== prevState.value) {
+          return { value: nextProps.value }
+        }
+        return null
+      }
+  > componentDidMount()
+    컴포넌트를 만들고 첫 렌더링을 마친 후 실행 
+  > shouldComponentUpdate(nextProps, nextState)
+    props나 state 변경 시 리렌더링을 시작할지 여부를 지정하는 메소드
+    true나 false 값을 반환해야 함 
+    최적화 용도 
+  > getSnapshotBeforeUpdate(prevProps, prevState)
+    렌더링된 결과물이 브라우저에 반영되기 직전에 호출 
+    이 메소드의 반환값은 componentDidUpdate에서 세 번째 파라미터인 snapshot 값으로 전달받을 수 있음 
+    업데이트 하기 전의 값을 참고할 일이 있을 때 활용됨 (ex 스크롤 바 위치 유지)
+  >componentDidUpdate(prevProps, prevState, snapshot)
+    리렌더링 완료 후 실행 업데이트 끝난 직후이므로 DOM 관련 처리를 해도 됨 
+    prev___로 이전 데이터에 접근 가능, snapshot 값 전달 받음
+  >componentWillUnmount()
+    컴포넌트를 DOM에서 제거할 때 실행 
+    componentDidMount에서 직접 등록한 이벤트, 타이머, DOM 등은 여기서 제거해야 함
+  >componentDidCatch
+    렌더링 도중 에러 발생 시 먹통이 되지 않고 오류 UI를 보여줌 
