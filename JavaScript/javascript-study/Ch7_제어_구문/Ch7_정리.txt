@@ -1,0 +1,16 @@
+# if else 
+   as I know. 
+
+# switch case 
+   일치 확인은 ==가 아닌 === (strict compare)
+   case 뒤에 상수가 오지 않아도 된다
+
+# for / while continue break + do while 
+   as I know
+   python 처럼 for index in array 가능 (index 자동으로 늘어남) -> 이것은 변수 in 객체 와 같은데, 변수는 iterator로서 객체의 property 이름이다.
+
+# 점프문 
+   모든 문장에 라벨링이 가능 : ex) loop : while () {} ,,. 
+   라벨 점프 문장은 continue, break 뿐 
+   -> break loop 등을 이용하면 플래그 없이 다중 반복문을 탈출 가능 
+

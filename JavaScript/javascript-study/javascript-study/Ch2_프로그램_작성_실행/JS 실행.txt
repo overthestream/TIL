@@ -1,0 +1,10 @@
+# JS를 HTML에 삽입하여 실행하기.
+   only JS : HTML <body> 안에 <script> 태그를 이용하여 감싸주면 JS가 실행됨
+   HTML,CSS + JS : <head>의 자식 요소로 <script>.
+
+   -> src를 이용 ex) <script src="./factorial.js"> </script>
+      ex -> ./factorial.HTML
+
+# node.js 로 js 돌리기
+   terminal에서 node 명령어 이용. 
+   ex) node factorial.js

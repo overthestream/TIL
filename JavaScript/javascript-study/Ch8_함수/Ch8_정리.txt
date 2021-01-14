@@ -1,0 +1,203 @@
+# 함수 정의하기 
+   > 함수 선언문 : function name(argument){ contents }
+      hoisting 가능 
+   > 함수 리터럴 : var name = function(argument){ contents }
+   > Function 생성자 : var name = new Function("argument", "contents)
+   > 화살표 함수 표현식 : var name = argument => contents
+
+# Nested Function | Inner Function (중첩 함수, 내부 함수, 지역 함수)
+   외부 함수의 최상위 레벨에 중첩 함수를 작성 가능 = if, while 등의 블록 밖에만 작성 가능
+   static 함수 같은 것인듯..?
+   외부 함수의 인수 사용 가능 (사실 당연한 것, 이것도 블록이니까~)
+
+# 함수 호출
+   > 함수 호출 : name(argument)
+   > 메소드 호출 : Object.method(argument)
+   > 생성자 호출 : var instance = new Object(argument)
+   > call, apply를 사용한 간접 호출 
+
+# 즉시 실행 함수
+   (function (argument) {contents})(argument)
+
+# 함수의 인수 
+   인자를 적게 전달 시 함수 내부에서 원래 인자는 undefined가 됨 
+   + 논리 연산자의 특성 활용 
+      -> 인수가 적어도 되는 함수를 만들 수 있다 ex) b = b || 1
+   함수의 인수 값들은 arguments 라는 지역 변수 객체에 저장되어 있음
+      배열처럼 인덱스를 통해 접근 가능 (배열 길이 = 함수 호출 시 준 인자 수) 
+      arguments.callee = 현재 호출중인 함수 이름 (익명 함수도 재귀호출이 가능하다)
+   
+# JS는 어떻게 돌아가는가?
+   실행가능한 코드(Executable Code)를 만나면 그 코드를 평가(Evaluation)하여 실행 문맥(Execution Context)로 만든다.
+      Executable Code : 전역 코드, 함수 코드, eval 코드
+         > 전역 코드 : 전역 객체 Window 아래에 정의된 함수 
+         > 함수 코드 : just 함수
+         > eval 코드 : 문자열을 코드화 하는 eval 함수 
+      Execution Context : Executable Code가 실제로 실행되고 관리되는 영역, 실행에 필요한 정보를 컴포넌트 여러 개가 나누어 관리
+         > Lexical Environment Component 
+         > Variable Environment Component
+            Lexical, Variable : Lexical Environment 타입의 컴포넌트, 내부 값이 with문 사용 시를 제외하고 같음
+            # Lexical Environment Component
+               JS 엔진이 JS 코드를 실행하기 위해 자원을 모아둔 곳 -> 함수 또는 블록의 유효 범위 안에 있는 식별자와 그 결과가 저장됨
+               JS 엔진은 JS 코드의 범위 안에 있는 식별자와 그 값을 키와 값의 쌍으로 바인드하여 이곳에 기록
+               > Environment Record 
+                  유효 범위 안에 포함된 식별자를 기록하고 실행
+                  렉시컬 환경 안의 식별자와 그 식별자의 값의 묶음이 실제로 저장되는 영역
+                  > Declarative Environment Record : 실제 함수와 변수, catch 문의 식별자와 실행 결과 
+                  > Object Environment Record : 실행 문맥 외부에 별도로 저장된 객체의 참조에서 데이터를 읽거나 씀
+               > Outer Lexical Environment Reference
+                  함수를 둘러싸고 있는 코드가 속한 렉시컬 환경 컴포넌트의 참조가 저장 : 바깥 코드에 정의된 변수를 읽을 때 이것을 따라 거슬러 올라감
+         > This Binding Component
+            함수를 호출한 객체의 참조가 저장됨 (객체의 this!!)
+         
+   # 전역 환경
+      JS 인터프리터는 실행 시 렉시컬 환경 타입의 Global Environment를 생성
+      전역 객체를 생성한 다음 Global Environment의 Object Environment Record에 전역 객체의 참조 대입 : 제일 바깥의 this === window 객체
+      :
+         GlobalEnvironment = {
+            ObjectEnvironmentRecord: {
+               bindObject: window
+            },
+            OuterLexicalEnvironmentReference: null
+         }
+         ExecutionContext = {
+            LexicalEnvironment: GlobalEnvironment,
+            ThisBinding: window
+         }
+   -> ### 대충 정리 : 코드 실행 시 코드 전체를 본 뒤에 실행이 이루어짐 -> hoisting이 가능한 이유. 여기서 코드 실행은 함수 등 모든 것을 말하기에 내부 함수도 hoisting이 가능한 것 
+   그래서, 뭐가 중요하냐?
+      this가 무엇을 가리키는건가.
+         > 최상위 레벨 코드에서 : 전역 객체, 즉 Window
+         > 이벤트 처리기 안에서 : 이벤트가 발생한 요소 객체 ex) button
+         > 생성자 함수 안에서 : 생성자로 생성한 객체
+         > 생성자의 prototype 메소드 안에서 : 그 생성자로 생성한 객체
+         > 직접 호출한 함수 안에서 : 함수를 최상위 레벨 코드에서 호출 시 this는 전역 객체(Window)를 참조, this 바인딩 컴포넌트가 전역 객체를 가리키기 때문
+         > apply와 call 메소드로 호출한 함수 안에서 : apply와 call을 이용하면 함수 호출 시 this가 가리키는 객체를 바꿀 수 있다. 즉 디스 바인딩 컴포넌트가 참조하는 객체를 설정 가능
+
+# 클로저 (Closure, 함수 폐포)
+   자기 자신이 정의된 환경에서 함수 안에 있는 자유 변수의 식별자 결정을 실행
+   내부 함수는 외부 함수의 변수에 접근 가능한데,
+      function outter(){
+         var title = 'coding everybody';  
+         return function(){        
+            alert(title);
+         }
+      }
+      inner = outter();
+      inner();
+   이 예시에서 inner에 outter 함수의 반환값으로 익명 함수 하나가 저장되었는데, 외부 함수인 outter이 소멸했음에도 inner 함수는 title이라는 값에 접근한다. 이것이 바로 클로저라는 특성이다.
+
+      function factory_movie(title){
+         return {
+            get_title : function (){
+               return title;
+            },
+            set_title : function(_title){
+               title = _title
+            }
+         }
+      }
+      ghost = factory_movie('Ghost in the shell');
+      matrix = factory_movie('Matrix');
+      
+      alert(ghost.get_title());
+      alert(matrix.get_title());
+      
+      ghost.set_title('공각기동대');
+      
+      alert(ghost.get_title());
+      alert(matrix.get_title());
+   이 예제에서도, title이라는 property가 없음에도 getter, setter 함수는 title이라는 변수에 접근한다. 
+   클로저 특성을 이용하면 JS에서 private 변수를 작성할 수 있다.
+   내부 함수의 값을 외부에서 사용하도록 만드는 것, 이게 바로 클로저 
+   클로저 = closure 열린 것을 감싸, 외부에서 사용가능케 한 것 
+   # 이것이 왜 와이 가능하냐.
+      내부 함수가 실행 문맥에 들어갈 때 내부 함수를 정의한 외부 함수에 있는 변수를 참조하기에, 즉 렉시컬 환경 컴포넌트에서 참조하기에 외부 함수가 소멸하여도(가비지 컬렉션) 외부 함수에 선언되어, 내부 함수에서 사용하는 그 변수는 소멸하지 않음(가비지 컬렉션 X)
+   private member이 가능하도록 하는 테크닉 
+   + 동일한 함수 코드로 비슷하지만 detail이 다른 기능 구현 가능 
+   ex ->
+      funtion multi(x) {
+         return function(y){
+            return x * y
+         }
+      }
+      var multi2 = multi(2)
+      var multi10 = multi(10)
+   multi2 와 multi10은 각각 같은 코드를 갖고 있지만, 2, 10을 곱한다는 점에서 다름
+   multi2의 클로져에는 x값이 2로서 저장되어 있고, multi10에는 x=10.
+
+   # 주의할 점.
+      반복문에서 iterator 값을 참조하는 클로저를 가진 함수를 각각 만들면 만들어진 함수들은 각각 iterator 하나를 클로저로서 참조하게 되어,
+      값이 다르지 않고 모두 하나로 나옴.
+      ex ->
+         var arr = []
+         for(var i = 0; i < 5; i++){
+            arr[i] = function(){
+               return i;
+            }
+         }
+      arr[0~4]는 모두 5를 return하는 함수가 됨.
+      해결법 
+         > 즉시 실행 함수로 만든다 -> 즉시 iterator 값이 클로져에 담김
+         > 블록 유효 범위를 가진 let을 사용시 loop가 끝날때마다 let i 가 소멸되어 클로져가되고, 증감식 i++ (i = i+1)에서 let i 가 새롭게 선언되므로 let 사용시 해결 가능
+
+# 전역 변수와 함수 선언 시 주의점
+   전역으로 변수나 함수를 선언 시 대규모로 프로그래밍을 할 때, 변수, 함수명이 겹쳐 문제점이 발생할 수 있음
+      > 해결 방안 : 코드 하나 전체를 C의 main 함수처럼 하나의 함수로 선언 -> 함수, 변수의 scope가 함수가 되므로, 전역이 아니게 됨
+      > 객체를 사용하여 변수는 property로, 함수는 메소드로, namespace처럼 사용하기 
+
+# 객체로서의 함수
+   함수의 apply 메소드 
+      함수.apply(객체, [인수 배열]) -> 함수에서 this = apply 호출 시 준 객체가 됨, 인수 = [인수 배열]
+   함수의 call 메소드
+      apply와 동일하나 인수를 배열이 아닌, 여러 인수로 그대로 넘김
+   함수 객체에 프로퍼티 추가도 가능
+      -> 이를 활용한 메모이제이션 가능
+   
+   bind 메소드나, 함수 + 내부 함수를 이용하면 인수 중 몇 개를 고정하거나, 인수를 줄이는 등의 이용이 가능 .
+
+# 화살표 함수 표현식
+   익명 함수의 단축 표현 (완전히 동일한 것 아님!)
+   declaration funcName = (arguments) => {definition}
+   즉시 실행 함수 가능 
+   리터럴과의 차이점 
+      > this의 값이 함수를 정의할 때 결정된다. : 함수 리터럴의 this : 함수 호출 시 결정 | 화살표 함수는 정의 시 바깥의 this값이 화살표 함수의 this가 됨 
+      > arguments 변수가 없음 
+      > new가 안된다 (생성자로 쓸 수 없다)
+      > yield 키워드 x
+
+# 인수 배열로 호출 
+   함수 호출 시 인자가 들어가는 부분에 (인자, 인자, ... 배열 이름) 사용 시 ... 부분에 입력된 인자들이 배열에 저장됨 
+
+# 인수 기본값 적용
+   함수 정의 시 인자 정의 때 (함수 선언 부) 인자에 값 할당 시 기본값 적용 가능 
+
+# 이터레이터
+   배열.forEach( 표현식 (함수) ) 표현식 안에서 val 변수 이용하면 for i in arr 처럼, 자동으로 이터레이션 가능 
+   배열의 이터레이터 메소드.
+   ex 
+      var a = [5, 4, 3]
+      var iter = a[Symbol.iterator]()
+      console.log(iter.next())   // Object {value: 5, done: false}
+      console.log(iter.next())   // Object {value: 4, done: false}
+      console.log(iter.next())   // Object {value: 3, done: false}
+      console.log(iter.next())   // Object {value: undefined, done: true}
+      console.log(iter.next())   // Object {value: undefined, done: true}
+   Symbol.iterator는 이터레이터를 반환하는 함수
+
+# for of  
+   for (let i of arr)
+
+# 제너레이터
+   반복 가능한 이터레이터를 값으로 변환
+   작업의 일시 정지와 재시작이 가능하며 자신의 상태를 관리
+   function* 로 정의 
+   ex 
+      function* gen() {
+         yield 1
+         yield 2
+         yield 3
+      }
+      var iter = gen()
+   여기서 gen, 즉 iter 객체는 이터레이터처럼 쓸 수 있음 (배열의 요소 == yield 프로퍼티)
+   메커니즘 : 함수 실행 시 yield를 만나면 함수를 멈추고 이터레이터는 yield 값을 반환, next 에서 다음 yield까지 감 

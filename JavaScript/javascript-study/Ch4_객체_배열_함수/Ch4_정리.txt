@@ -1,0 +1,46 @@
+# 객체
+   이름과 값을 한 쌍으로 묶은 데이터를 여러 개 모은 것
+   파이썬의 딕셔너리와 비슷
+   객체 생성 방법은 리터럴과 생성자 두가지
+   객체는 참조!!
+   메소드 : 함수 리터럴을 대입.
+   # 리터럴
+      파이썬의 딕셔너리처럼 생성 
+      ex) var card = { suit : "하트", "rank" : "A" }
+      값에 접근 : . 또는 [] -> card["suit"], card.rank
+   # 생성자
+      this 이용. 
+      ex)
+      function Card(suit, rank){
+         this.suit = suit
+         this.rank = rank
+      }
+      var card = new Card 
+   Object, String, Numver, Boolean, Array, Function 등 내장 객체(네이티브 객체)가 존재하여 이용 가능 -> 함수도 객체임
+   JS 객체는 세가지로 나뉨
+   네이티브 객체, 호스트 객체, 사용자 정의 객체. 
+      호스트 객체 : 브라우저 객체(Windowm Navigator, Screen 등), HTML 요소를 조작하는 DOM객체, HTML의 API 객체 등
+      사용자 정의 객체 : 코드에서 정의한 것 
+
+# 함수
+   선언은 function 이용
+   ex) function square(x){ return x * x}
+   또는, var bark = function() { console.log("멍멍") } 이런 느낌도 가능. : 함수 리터럴. 익명 함수, 무명 함수
+   함수 선언도 변수 선언과 마찬가지로 끌어올림(hoisting)
+   함수 또한 객체 -> 함수 선언 시 내부적으로 함수 이름을 변수 이름으로 한 변수와 함수 객체가 만들어지고, 그 변수에 함수 객체의 참조가 저장됨 -> var bark 가 가능한 이유.
+   호출은 원시 값은 call-by-value, 객체 값은 call-by-reference
+
+# 변수의 범위
+   전역 변수와 지역 변수 (함수 안, 밖에서 선언되었는가로 구분)
+   let 키워드 : 중괄호 블록을 유효 범위로 갖는 지역 변수를 선언함
+   const 키워드 : 동일 but 상수
+
+# 배열
+   배열 리터럴 : 대괄호로 생성 
+   파이썬처럼 모든 타입의 값이 올 수 있음.
+   length 프로퍼티에는 배열의 길이가 담겨있음
+   length를 직접 수정 시 length <= index의 배열 요소가 삭제됨
+   Array 생성자로 생성 가능 (인수로 배열 요소 넘겨줌.) 인수가 만약 하나라면, 이것은 배열 길이가 됨. (값은 undefined) -> 음수 한개 x
+   배열은 C, JAVA의 그것이 아닌, just 객체로 흉내낸 것  / TypedArray 는 C, JAVA의 것과 동일한 객체
+   메소드 : push -> 배열 끝에 붙임 / delete : 요소 삭제 
+   희소 배열 : 객체로 흉내낸 것이므로 배열에 요소 추가 시 인덱스가 중간에 비는 배열 만들 수 있다. 배열 길이 : 마지막 인덱스 + 1 이므로 length가 실제 값과 다름 
