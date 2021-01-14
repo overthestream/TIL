@@ -356,7 +356,11 @@ function travelToTexas(vehicle) {
 ### 죽은 코드는 바로 지워라
 그 코드를 재사용할 일이 있다고 해도 그것은 히스토리에 남아있으므로 그냥 지워라
 
+
+<hr/>
+
 ## 객체와 자료구조(Objects and Data Structures)
+
 ### getter와 setter를 사용하라 
 자바스크립트는 인터페이스와 타입, private, public 등이 없으므로 그냥 getter, setter를 사용하여 객체의 데이터에 접근하라.
 
