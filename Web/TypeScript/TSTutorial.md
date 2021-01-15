@@ -46,6 +46,14 @@ interface Shape {
 class Circle implements Shale { // interface 를 이용한 class 선언 
 
 }
+
+```
+
+### Font 등 import 하기 
+d.ts 파일에서 모듈 선언을 해줘야 사용 가능
+##### 예시
+``` ts
+declare module '*.ttf'
 ```
 
 
@@ -123,3 +131,22 @@ export default Greetings
 ```
 <hr/>
 
+## TS에서 styled-components 쓰기 
+
+``` sh
+npm i -D @types/styled-components # 스타일드 컴포넌트 + 타입 정의 
+npm install --save-dev typescript-styled-plugin # 스타일드 컴포넌트 하이라이터
+```
+그리고, 
+__tsconfig.json__
+``` json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ]
+  }
+}
+```
