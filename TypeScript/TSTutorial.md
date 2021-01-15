@@ -53,7 +53,8 @@ class Circle implements Shale { // interface 를 이용한 class 선언
 
 ## create-react-app using TS 
 ``` sh
-yarn create react-app [app name] --typescript
+yarn create react-app my-app --template typescript
+
 ```
 
 ## 기존 React App에 TS 적용하기
@@ -90,7 +91,7 @@ children이 option으로 들어가있기에 컴포넌트의 props의 타입이 �
 처리하고싶다면 Props 안에 children을 설정해야 함 
 ##### 예시
 ``` ts
-type GreetingProps = {
+type GreetingProps = { // interface 사용 가능 
   name: string
   children: React.ReactNode
 }
