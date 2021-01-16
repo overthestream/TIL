@@ -26,12 +26,27 @@ npm install -g typescript
 
 ### 타입 선언하기 
 변수 선언 시 뒤에 타입을 선언 
+
+#### 기본 타입
+- Boolean
+- Number
+- String
+- Object
+- Array 
+- Tuple (길이가 고정되고 각 요소의 타입이 지정된 배열)
+- Enum (C의 열거형)
+- Any (모든 타입 허용, 많이 쓰진 말자)
+- Void
+- Null 
+- Undefined
+- Never  (함수의 끝에 도달하지 않는다는 의미 )
+
 ##### 예시
 ``` ts
 const isDone:boolean = true
 const message:string = 'hello world'
 const numbers: number[] = [1,2,3] // 배열은 대괄호 
-let mightBeUndef: string | undefined = undefined // | 사용 시 여러 타입 사용 가능
+let mightBeUndef: string | undefined = undefined // | 사용 시 여러 타입 사용 가능 (Union Type)
 let color: 'red' | 'orange' | 'yellow' = 'red' // 값을 타입으로도 사용 가능 
 ```
 
@@ -49,13 +64,127 @@ class Circle implements Shale { // interface 를 이용한 class 선언
 
 ```
 
+### 클래스 
+객체 지향 프로그래밍
+
+private, getter, setter 설정이 가능하다 
+
+##### 예시 
+``` ts 
+class Developer {
+  private name : string
+
+  get name(): string {
+    return this.name
+  }
+
+  set name(newValue: string) { // get만 설정하고, set을 미설정 하면 자동으로 readonly 변수가 된다
+    if(newValue && newValue.length > 5) {
+      throw new Error('이름이 너무 깁니다')
+    }
+    this.name = newValue;
+  }
+}
+```
+
+#### 추상클래스 (Abstract Class)
+추상 클래스는 인터페이스와 비슷한 역할을 하면서 조금 다르다.
+
+추상 클래스는 특정 클래스의 상속 대상이 되며, 상위 레벨에서 속성과 메소드를 정의함
+
+abstract가 붙은 놈은 무조건 구현해야 함 (오버라이드)
+##### 예시
+``` ts
+abstract class Developer {
+  abstract coding(): void
+  dring(): void{
+    console.log('drink sth')
+  }
+}
+
+class FrontEndDeveloper extends Developer {
+  coding(): void {
+    console.log('develop web')
+  }
+  design(): void {
+    console.log('design web')
+  }
+}
+
+```
+
+### 제네릭 (Generics)
+타입을 함수의 파라미터처럼 사용하는 것.
+
+제네릭 코딩 
+
+##### 예시
+``` ts
+function logText<T>(text: T): T {
+  return text
+}
+
+logText<string>("Hello World") // <string> 생략 가능
+```
+
+#### 제네릭 인터페이스
+##### 방법 예시
+``` ts
+function logText<T>(text: T): T {
+  return text;
+}
+
+// 1
+let str: <T>(text: T) => T = logText; 
+// 2
+let str: {<T>(text:T): T} = logText;
+
+// 1
+interface GenericLogTextInterface { 
+  <T>(text: T): T;
+}
+let func: GenericLogTextInterface = logText
+
+// 2
+interface GenericLogTextInteface2<T> {
+  (text: T): T
+}
+let func2: GenericLogTextInterface2<string>= logText
+```
+제네릭 클래스도 비슷한 방법으로 가능 
+#### 제네릭 제약 걸기 
+``` ts
+function logText<T>(text: T): T {
+  console.log(text.length)
+  return text
+}
+```
+에러가 발생한다. text 인자에 length가 있을지 없을지 모르니까
+해결법 
+``` ts
+interface LengthWise {
+  length: number
+}
+function logText<T extends LenthWise>(text: T): T {
+  console.log(text.length)
+  return text
+}
+```
+제네릭 타입으로 length 프로퍼티를 가진 놈만 받게 제약을 걸 수 있다.
+
+### d.ts
+타입 스크립트 코드의 타입 추론을 돕는 파일 
+
+### 모듈?
+
+모듈은 전역 변수와 구분되는 자체 유효 범위를 가지며 export, import 등의 키워드를 이용해 다른 파일에서 접근함 
+
 ### Font 등 import 하기 
 d.ts 파일에서 모듈 선언을 해줘야 사용 가능
 ##### 예시
 ``` ts
 declare module '*.ttf'
 ```
-
 
 <hr/>
 
@@ -150,3 +279,8 @@ __tsconfig.json__
   }
 }
 ```
+
+## ref
+[타입스크립트 핸드북](https://joshua1988.github.io/ts/guide/type-inference.html#타입-추론-type-inference)
+
+[react.vlpt.us](https://react.vlpt.us/using-typescript/01-practice.html)
