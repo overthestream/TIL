@@ -255,3 +255,320 @@ transaction(() => {
 
 console.log(gs25.total);
 ```
+
+## [Mobx 리액트에 적용한 Counter 예제](https://velog.io/@velopert/MobX-2-리액트-프로젝트에서-MobX-사용하기-oejltas52z)
+
+**Counter.js**
+
+```js
+import React, { Component } from 'react';
+import { decorate, observable, action } from 'mobx';
+import { observer } from 'mobx-react';
+
+class Counter extends Component {
+	number = 0;
+
+	increase = () => {
+		this.number++;
+	};
+
+	decrease = () => {
+		this.number--;
+	};
+
+	render() {
+		return (
+			<div>
+				<h1>{this.number}</h1>
+				<button onClick={this.increase}>+1</button>
+				<button onClick={this.decrease}>-1</button>
+			</div>
+		);
+	}
+}
+
+decorate(Counter, {
+	number: observable,
+	increase: action,
+	decrease: action,
+});
+
+export default observer(Counter);
+```
+
+**App.js**
+
+```js
+import React, { Component } from 'react';
+import Counter from './Counter';
+
+class App extends Component {
+	render() {
+		return (
+			<div>
+				<Counter />
+			</div>
+		);
+	}
+}
+
+export default App;
+```
+
+state, props 없이 Data 주고받기가 가능하다
+
+## 다른 파일에 store 만들기!
+
+**stores/counter.js**
+
+```js
+import { observable, action } from 'mobx';
+
+decorate(CounterStore, {
+	number: observable,
+	increase: action,
+	decrease: action,
+});
+
+export default class CounterStore {
+	number = 0;
+
+	increase = () => {
+		this.number++;
+	};
+
+	decrease = () => {
+		this.number--;
+	};
+}
+```
+
+## Provider로 프로젝트에 스토어 적용
+
+**index.js**
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'mobx-react'; // MobX 에서 사용하는 Provider
+import './index.css';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+import CounterStore from './stores/counter'; // 방금 만든 스토어 불러와줍니다.
+
+const counter = new CounterStore(); // 스토어 인스턴스를 만들고
+
+ReactDOM.render(
+	<Provider counter={counter}>
+		{/* Provider 에 props 로 넣어줍니다. */}
+		<App />
+	</Provider>,
+	document.getElementById('root')
+);
+
+registerServiceWorker();
+```
+
+## inject로 컴포넌트에 스토어 주입
+
+**Counter.js**
+
+```js
+import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
+
+@inject('counter')
+@observer
+class Counter extends Component {
+	render() {
+		const { counter } = this.props;
+		return (
+			<div>
+				<h1>{counter.number}</h1>
+				<button onClick={counter.increase}>+1</button>
+				<button onClick={counter.decrease}>-1</button>
+			</div>
+		);
+	}
+}
+
+export default Counter;
+```
+
+스토어를 props로 전달받을 수 있다.
+
+## 특정 값만 스토에서 받아오기도 가능
+
+```js
+import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
+
+// **** 함수형태로 파라미터를 전달해주면 특정 값만 받아올 수 있음.
+@inject((stores) => ({
+	number: stores.counter.number,
+	increase: stores.counter.increase,
+	decrease: stores.counter.decrease,
+}))
+@observer
+class Counter extends Component {
+	render() {
+		const { number, increase, decrease } = this.props;
+		return (
+			<div>
+				<h1>{number}</h1>
+				<button onClick={increase}>+1</button>
+				<button onClick={decrease}>-1</button>
+			</div>
+		);
+	}
+}
+
+export default Counter;
+```
+
+```js
+import React from 'react';
+import ShopItem from './ShopItem';
+import { inject, observer } from 'mobx-react'; // 불러오기
+
+const items = [
+	{
+		name: '생수',
+		price: 850,
+	},
+	{
+		name: '신라면',
+		price: 900,
+	},
+	{
+		name: '포카칩',
+		price: 1500,
+	},
+	{
+		name: '새우깡',
+		price: 1000,
+	},
+];
+
+// **** onPut 함수 추가됨
+const ShopItemList = ({ onPut }) => {
+	const itemList = items.map((item) => <ShopItem {...item} key={item.name} onPut={onPut} />);
+	return <div>{itemList}</div>;
+};
+
+// **** inject, observer 적용
+export default inject(({ market }) => ({
+	onPut: market.put,
+}))(observer(ShopItemList));
+```
+
+이런 느낌.
+
+## 스토어끼리 관계 형성
+
+스토어끼리 접근을 하기 위해서는 **RootStore** 이 필요하다.
+
+### 예제
+
+**src/stores/index.js**
+
+```js
+import CounterStore from './counter';
+import MarketStore from './market';
+
+class RootStore {
+	constructor() {
+		this.counter = new CounterStore(this);
+		this.market = new MarketStore(this);
+	}
+}
+
+export default RootStore;
+```
+
+root 스토어에서 다른 스토어를 불러오고 생성해준 후, this를 파라미터로 넣어준다. -> 이거 스토어 클래스 생성자에서 받아서 처리
+
+this를 파라미터로 넣어주면, 각 스토어에서 루트 스토어로 접근이 가능하므로,
+
+스토어 -> 루트 스토어 -> 다른 스토어 이게 가능 .
+
+함수형 스토어는 없나 .?
+
+provide 할 때도 편리. 따로 생성 안하고 루트만 넣어주면 된다 .
+
+**src/index.js**
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'mobx-react'; // MobX 에서 사용하는 Provider
+import './index.css';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+import RootStore from './stores';
+
+const root = new RootStore(); // *** 루트 스토어 생성
+
+ReactDOM.render(
+	<Provider {...root}>
+		{' '}
+		{/* *** ...root 으로 스토어 모두 자동으로 설정 */}
+		<App />
+	</Provider>,
+	document.getElementById('root')
+);
+
+registerServiceWorker();
+```
+
+this.root.다른스토어 이런 식으로 접근 가능
+
+## Mobx 리액트 컴포넌트 최적화
+
+1. 리스트 렌더링 시 컴포넌트에 리스트 데이터만 props로 넣자.
+
+리스트 렌더링 시에는 성능을 신경써야 한다.
+
+리액트는 그 바뀐거 리렌더링을 하잖아?
+
+예를 들어서 리스트 렌더링 컴포넌트에 유저 정보가 들어 있으면,
+
+유저가 바뀔 때도 리렌더링 되니까 느려진다. 이런건 분리를 하자
+
+2. 세부 참조는 최대한 늦게 하자
+
+세부참조 혹은 역참조 = dereference
+
+```js
+const itemList = items.map((item) => (
+	<BasketItem
+		name={item.name}
+		price={item.price}
+		count={item.count}
+		key={item.name}
+		onTake={onTake}
+	/>
+));
+```
+
+이런게 세부 참조임, 그런데 이걸 아이템 컴포넌트 내부에서 하면. 좋겠다 이거죠.
+
+```js
+const itemList = items.map((item) => <BasketItem item={item} key={item.name} onTake={onTake} />);
+```
+
+3. 함수는 미리 바인딩하고, 파라미터는 내부에서 넣기
+
+클린코드죠.. 함수는 변수에 넣어서 하란말이야
+
+## [from mobx doucument](https://mobx.js.org/observable-state.html)
+
+#### makeObservable(target, annotations?, options?)
+
+모든 객체가 target 인수가 될 수 있다.
+
+-> 클래스의 constructor에서 target에 this 넣어서 호출
+
+annotation: 저스트 주석 넣는 것 .
+
+#### makeAutobservable(target, overrides?, options)
