@@ -48,6 +48,7 @@ npx create-react-app myapp --template ts-prettier-eslint-airbnb
 ```
 
 ```sh
+yarn add styled-components
 npm i -D @types/styled-components # 스타일드 컴포넌트 + 타입 정의
 npm install --save-dev typescript-styled-plugin # 스타일드 컴포넌트 하이라이터
 ```
