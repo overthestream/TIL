@@ -1,3 +1,4 @@
+import matplotlib.pylab as plt
 import pandas as pd
 
 period = 20
@@ -80,3 +81,4 @@ bollinger = bollingerBand(price_df, period, sigmaWeight, baseDate)
 book = createTradeBook(bollinger)
 book = tradings(bollinger, book)
 returns(book)
+print(book['acc return'].plot())
