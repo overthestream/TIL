@@ -1,90 +1,82 @@
 import FinanceDataReader as fdr
-import pandas as pd
+from FinanceDataReader import data
 import numpy as np
+import pandas as pd
 import csv
 
+from pandas.core.frame import DataFrame
 
-def sort_value(s_value, asc=True, standard=0):
+route = 'data/ch04/PER_ROA.csv'
+krxDataFrame = fdr.StockListing('KRX')
 
-    s_value_mask = s_value.mask(s_value < standard, np.nan)
-    s_value_mask_rank = s_value_mask.rank(
-        ascending=asc, na_option="bottom")
-
-    return s_value_mask_rank
-
-
-def MagicFormula(PER, ROA):
-
-    PER_rank = sort_value(PER, asc=True)
-    ROA_rank = sort_value(ROA, asc=False)
-
-    result_rank = PER_rank + ROA_rank
-
-    result = result_rank.rank(axis=1, ascending=True)
-
-    result = result.where(result <= 10, 0)
-    result = result.mask(result > 0, 1)
-
-    return result
-
-
-krx_df = fdr.StockListing('KRX')
-df = pd.read_csv('../data/ch04/PER_ROA.csv', engine='python', encoding='cp949')
-df = df[~df.isin([np.nan, np.inf, -np.inf]).any(1)]
-
-line_list = []
-with open('../data/ch04/PER_ROA.csv') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    for row in csv_reader:
+lineList = []
+with open(route) as csvFile:
+    csvReader = csv.reader(csvFile, delimiter=',')
+    for row in csvReader:
         if '' in row:
             pass
         else:
-            line_list.append(row)
+            lineList.append(row)
+dataFrame = pd.DataFrame(data=lineList[1:], columns=lineList[0])
+dataFrame = dataFrame[~dataFrame.isin([np.nan, np.inf, -np.inf]).any(1)]
 
-df = pd.DataFrame(data=line_list[1:], columns=line_list[0])
-per = pd.to_numeric(df['PER'])
-roa = pd.to_numeric(df['ROA'])
 
-per_rank = sort_value(per, asc=True, standard=0)
+def sortVal(series, asc=True, standard=0):
+    '''
+    특정 지표를 정렬 
+    series: pandas Series
+        정렬할 데이터 
+    asc: bool 
+        True: 오름차순
+        False: 내림차순
+    standard: number
+        조건에 맞는 값을 True로 대체하기 위한 기준 값
+    returns: 
+        rankedSeries: pandas Series 
+            정렬된 순위 
+    '''
+    maskedSeries = series.mask(series < standard, np.nan)
+    rankedSeries = maskedSeries.rank(ascending=asc, na_option="bottom")
+    return rankedSeries
 
-roa_rank = sort_value(roa, asc=False, standard=0)
 
-result_rank = per_rank + roa_rank
-result_rank = sort_value(result_rank, asc=True)
-result_rank = result_rank.where(result_rank <= 10, 0)
-result_rank = result_rank.mask(result_rank > 0, 1)
+PER = pd.to_numeric(dataFrame['PER'])
+ROA = pd.to_numeric(dataFrame['ROA'])
 
-mf_df = df.loc[result_rank > 0, ['종목명', '시가총액']].copy()
-mf_stock_list = df.loc[result_rank > 0, '종목명'].values
+rankedPER = sortVal(PER, asc=True, standard=0)
+rankedROA = sortVal(ROA, asc=False, standard=0)
 
-mf_df['종목코드'] = ''
-for stock in mf_stock_list:
-    mf_df.loc[mf_df['종목명'] == stock,
-              '종목코드'] = krx_df[krx_df['Name'] == stock]['Symbol'].values
+resultRank = rankedPER + rankedROA
+resultRank = sortVal(resultRank, asc=True)
+resultRank = resultRank.where(resultRank <= 10, 0)
+resultRank = resultRank.mask(resultRank > 0, 1)
 
-mf_df['2019_수익률'] = ''
-for x in mf_df['종목코드'].values:
-    df = fdr.DataReader(x, '2019-01-01', '2019-12-31')
-    cum_ret = df.loc[df.index[-1], 'Close'] / \
-        df.loc[df.index[0], 'Close'] - 1
-    mf_df.loc[mf_df['종목코드'] == x, '2019_수익률'] = cum_ret
-    df = None
 
-mf_df_rtn = pd.DataFrame()
-for x in mf_df['종목코드'].values:
-    df = fdr.DataReader(x, '2019-01-01', '2019-12-31')
-    df['daily_rtn'] = df['Close'].pct_change(periods=1)
-    df['cum_rtn'] = (1+df['daily_rtn']).cumprod()
-    cum_ret = df.loc[df.index[-1], 'cum_rtn']
-    mf_df.loc[mf_df['종목코드'] == x, '2019_수익률'] = cum_ret
-    df = None
+mfDataFrame = dataFrame.loc[resultRank > 0, ['종목명', '시가총액']].copy()
+mfStockList = dataFrame.loc[resultRank > 0, '종목명'].values
 
-mf_df_rtn = pd.DataFrame()
+mfDataFrame['종목 코드'] = ''
+for stock in mfStockList:
+    mfDataFrame.loc[mfDataFrame['종목명'] == stock,
+                    '종목 코드'] = krxDataFrame[krxDataFrame['Name'] == stock]['Symbol'].values
 
-for x in mf_df['종목코드'].values:
-    df = fdr.DataReader(x, '2019-01-01', '2019-12-31') 
-    df['daily_rtn'] = df['Close'].pct_change(periods=1)
-    df['cum_rtn'] = (1+df['daily_rtn']).cumprod()
-    cum_ret = df.loc[df.index[-1], 'cum_rtn']
-    mf_df.loc[mf_df['종목코드'] == x, '2019_수익률'] = cum_ret 
-    df = None
+mfDataFrame['2019 수익률'] = ''
+for x in mfDataFrame['종목 코드'].values:
+    dataFrame = fdr.DataReader(x, '2019-01-01', '2019-12-31')
+    cumRet = dataFrame.loc[dataFrame.index[-1], 'Close'] / \
+        dataFrame.loc[dataFrame.index[0], 'Close'] - 1
+    mfDataFrame.loc[mfDataFrame['종목 코드'] == x, '2019 수익률'] = cumRet
+    dataFrame = None
+
+for ind, val in enumerate(mfDataFrame['종목 코드'].values):
+    codeName = mfDataFrame.loc[mfDataFrame['종목 코드'] == val, '종목명'].values[0]
+    dataFrame = fdr.DataReader(val, '2019-01-01', '2019-12-31')
+    if ind == 0:
+        mfDataFrameReturn = pd.DataFrame(index=dataFrame.index)
+    dataFrame['daily return'] = dataFrame['Close'].pct_change(periods=1)
+    dataFrame['accumulated return'] = (1+dataFrame['daily return']).cumprod()
+    tmp = dataFrame.loc[:, ['accumulated return']].rename(
+        columns={'accumulated return': codeName})
+    mfDataFrameReturn = mfDataFrameReturn.join(tmp, how='left')
+    dataFrame = None
+print(mfDataFrameReturn)
