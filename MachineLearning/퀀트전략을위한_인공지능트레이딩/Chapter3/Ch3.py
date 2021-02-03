@@ -21,4 +21,4 @@ price_df.head(10)
 price_df['st_rtn'] = (1+price_df['daily_rtn']).cumprod()
 price_df.head(10)
 
-price_df['st_rtn'].plot(figsize=(16, 9)
+price_df['st_rtn'].plot(figsize=(16, 9))

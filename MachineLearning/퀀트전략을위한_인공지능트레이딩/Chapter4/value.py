@@ -1,12 +1,11 @@
 import FinanceDataReader as fdr
-from FinanceDataReader import data
 import numpy as np
 import pandas as pd
 import csv
 
 from pandas.core.frame import DataFrame
 
-route = 'data/ch04/PER_ROA.csv'
+route = 'MachineLearning/퀀트전략을위한_인공지능트레이딩/data/ch04/PER_ROA.csv'
 krxDataFrame = fdr.StockListing('KRX')
 
 lineList = []
