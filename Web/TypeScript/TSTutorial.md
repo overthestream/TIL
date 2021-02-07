@@ -149,7 +149,7 @@ let func: GenericLogTextInterface = logText
 interface GenericLogTextInteface2<T> {
   (text: T): T
 }
-let func2: GenericLogTextInterface2<string>= logText
+let func2: GenericLogTextInterface2<string> = logText
 ```
 제네릭 클래스도 비슷한 방법으로 가능 
 #### 제네릭 제약 걸기 
