@@ -1,0 +1,11 @@
+{
+  "name": "tutorial",
+  "version": "1.0.0",
+  "description": "tutorial for express.js",
+  "main": "index.js",
+  "author": "overthestream",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
