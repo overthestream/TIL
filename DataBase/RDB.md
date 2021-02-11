@@ -1,29 +1,14 @@
-# 관계형 데이터베이스
+# [관계형 데이터베이스](https://en.wikipedia.org/wiki/Relational_database)
 
-**Relational Database**는 key와 value들의 간단한 관계를 테이블화 시킨 데이터베이스
-**관계형 모델**에 기초하는 데이터베이스
-모든 데이터가 관계로 짝지어진 tuple로 표현 가능
-SQL(structured query language)이용하여 반응
+**관계형 데이터베이스(Relational DataBase)**는 **관계형 모델(Relational Model)**에 기반한 데이터베이스이다.
+관계형 DB를 관리하기 위해 **RDBMS(Relational DataBase Management System)**이라는 소프트웨어 시스템을 사용
 
-## 관계형 모델
+DB에 질의 및 관리를 위해 **SQL(Structured Query Language)**를 사용하기도 함
 
-데이터를 row와 column을 이루는 하나 이상의 테이블(관계)로 정리, 고유 키(Primary key)로 각 row를 식별
-row는 레코드나 튜플로 부름
+## 관계형 모델 
+**관계형 모델**은 데이터를 1개 이상의, column(attribute)과 row, row(record, tuple)를 식별할 unique한 key들로 이루어진 테이블(또는 관계)로 표현한다 
+일반적으로 각각의 table(relation)은 하나의 entity type(하나의 데이터 타입)을 대표한다.
 
-## Key
-
-테이블의 각 row에는 고유 key가 있다.
-한 테이블 안의 row는 다른 테이블들의 row로 연결이 가능함
-
-### 관계(Relationships)
-
-관계는 테이블 간에 둘 다 존재
-일대일, 일대다, 다대다 세가지.
-
-## 용어
-
-SQL 용어 RDB 용어 설명
-로우 튜플 또는 레코드 하나의 항목을 대표하는 데이터
-컬럼 속성 또는 필드 튜플의 이름 요소 (주소 등)
-테이블 관계 또는 기초 관계 변수 같은 속성을 공유하는 튜플 모임(컬럼, 로우 모임)
-뷰 또는 결과 집합 파생 관계 변수 튜플의 모임
+ex로 entity type이 한 사람이라고 할 때,
+- row는 각 entity type의 instance를 표현한다(ex: Lee) 
+- column은 instance에 귀속된 값을 나타낸다(ee: 성씨)
