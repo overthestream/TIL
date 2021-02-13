@@ -67,11 +67,31 @@ dbname=>
 
 ### creating a table
 
-**ex**
+**ex: table called users with three fields: two VARCHAR & an auto-incrementing PRIMARY KEY**
+
 ```sh
 api=>
 CREATE TABLE users(
-  ID SERIAL PRIMARY key 
-
-)
+  ID SERIAL PRIMARY key
+  name VARCHAR(30)
+  email VARCHAR(30)
+);
 ```
+
+**add users**
+
+```sh
+INSERT INTO users (name, email)
+  VALUES ('Jerry','jerry@example.com'), ('George','george@example.com);
+```
+
+### Express.js server 만들기
+
+```sh
+mkdir node-api-postgres
+cd node-api-postgres
+yarn init
+yarn add express pg
+```
+
+make <code>index.js</code>
