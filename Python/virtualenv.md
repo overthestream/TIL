@@ -4,6 +4,9 @@
 # 만들기 (경로에는 가상환경 이름 폴더 추가)
 # ex: python3 -m venv ./MachineLearning/퀀트전략을위한_인공지능트레이딩/myvenv -> myvenv라는 가상환경 생성
 python3 -m venv 경로
+# 또는 
+pip3 install virtualenv # 설치 후 
+virtualenv 가상환경명 --python=python3.8 # 가상환경 디렉토리가 있길 원하는 디렉토리 내에서 / 버전 지정 가능
 # 가상환경 실행
 source 경로/bin/activate
 # 가상환경 비활성화
