@@ -17,3 +17,5 @@ Explore 기능
 ## 찾아보자.
 
 express Postgresql (관계형 데이터베이스), TypeORM
+
+https://velog.io/@wimes/node.js-REST-API-서버-만들기-7.-environment-split-eok419tflc
