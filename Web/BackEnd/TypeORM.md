@@ -15,6 +15,8 @@ Object Relational Mapping
 
 #### Object Persistence(영구적 객체)
 
+메모리 상의 데이터를 파일 시스템, 관계형 데이터베이스 혹은 객체 데이터베이스 등을 활용하여 영구적으로 저장하여 영속성을 부여한다.
+
 ## Active Record 패턴
 
 모델 자체에 쿼리 메소드를
