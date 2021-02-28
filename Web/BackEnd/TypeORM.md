@@ -242,3 +242,37 @@ const timber = await userRepository.findOne({ firstName: 'Timber', lastName: 'Sa
 
 - Active Record: 규모가 작은 애플리케이션
 - Data Mapper: 규모가 큰 애플리케이션, 유지 보수에 적합
+
+## Tutorial
+
+typeorm을 글로벌하게 설치
+
+```sh
+yarn global add typeorm
+```
+
+CRA처럼 간단하게 init해보기
+
+```sh
+# typeorm init --name 프로젝트명 --database 데이터베이스명
+typeorm init --name backend --database postgres
+```
+
+이후 위에서 본 User 예시 코드와 함께 프로젝트 폴더가 생성된다.
+
+프로젝트 폴더에는 <code>tsconfig.json</code>, <code>package.json</code> 등등이 있고, <code>ormconfig.json</code>에 typeORM 설정이 담겨있음.
+
+```json
+{
+	"type": "데이터베이스 타입",
+	"host": "localhost",
+	"port": 5432,
+	"username": "test",
+	"password": "test",
+	"database": "test",
+	.
+	.
+	.
+}
+```
+여기서 username, password, database만 만져주면 설정 끝. 
