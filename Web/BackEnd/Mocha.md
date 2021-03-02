@@ -98,3 +98,13 @@ $ node_modules/.bin/mocha spec.js경로
 ```
 
 -> 당연히 <code>package.json</code>에 script를 추가하면 편하겠죠?
+
+## ES6 문법 사용하기
+
+<code>-r ts-node/register</code>를 붙여준당
+
+```sh
+yarn test -r ts-node/register
+```
+
+이런 st
