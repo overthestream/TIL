@@ -95,3 +95,5 @@ Q-value라고도 함
 s에서 (정책 π에 따라) a를 수행했을 때 획득할 보상의 총 기댓값
 
 Q_π(s,a) = E[∑𝜸^iRt+i+1 | St=s, At=a]
+
+## 벨만 방정식 (Bellman equation)
