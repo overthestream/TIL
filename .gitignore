@@ -1,6 +1,7 @@
 .DS_Store
 Web/BackEnd/expressTutorial/node_modules/
 Web/BackEnd/typeORMTutorial/node_modules/
+Web/BackEnd/swaggerTutorial/node_modules/
 DataBase/node-api-postgres/node_modules/
 
 MachineLearning/퀀트전략을위한_인공지능트레이딩/virtual
