@@ -34,7 +34,11 @@ index 파일에서 url 수정 시 기본 경로가 아니라 docs로 이동
 
 url -> http://localhost:3000/swagger.yaml
 
-이거 안되더라.
+정적 파일 사용을 안했잖아 정훈아....
+
+```js
+app.use(express.static('public'));
+```
 
 ---
 
