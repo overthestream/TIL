@@ -109,11 +109,6 @@ normal
 
     code
 
-또는
-
-    <pre><code>{Hello! World!}</code></pre>
-
-<pre><code>{Hello! World!}</code></pre>
 
 또는 backtic 3개
 
@@ -122,6 +117,18 @@ normal
 ```
 Hello! World!
 ```
+
+또는
+
+inline code
+
+    <pre><code>{Hello! World!}</code></pre>
+
+<pre><code>{Hello! World!}</code></pre>
+
+또는 
+backtic 1개 
+
 
 <hr/>
 
