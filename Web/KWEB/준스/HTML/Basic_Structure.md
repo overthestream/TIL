@@ -126,4 +126,66 @@ JS와 결합하여 태그 클릭 시 특정 동작이 수행되도록 할 수 �
 
 위의 두 태그 하위 태그로 사용하는, 각 원소를 감싸는 li 태그 
 
-### img 태그 
+### img Tag 
+
+문서에 이미지를 삽입해주는 단일 태그.
+
+다음과 같은 속성 존재
+
+* src: 이미지 주소
+* alt: 이미지 로딩 실패 시 표시되는 이미지 설명
+* width: 너비
+* height: 높이
+  
+### Input Tag
+
+사용자로부터 정보를 입력받는 태그 
+
+input, textarea, select 등 존재
+
+* input: type 속성 값에 따라 다양한 형태로 입력 가능 
+  * text: plain text
+  * password: password
+  * radio: 목록 중 하나 선택
+  * checkbox: 목록 중 여러 개 선택 
+* textarea: 여러 줄의 텍스트 입력 가능, 크기, 설명 등을 속성 통해 설정 
+* select: drop-down 리스트를 만들 수 있다. 하위 항목은 option 태그로 감싸 줌.
+
+**radio 예시**
+``` HTML
+<label><input type="radio" name="gender" value="male">Male</label>
+<label><input type="radio" name="gender" value="female">Female</label>
+```
+
+입력 태그에는 name 속성 값을 지정해야 함 (key-value pair 형태로 사용 위힘), 그렇다면 value는?
+
+text를 입력받는 태그는 text 값 자체가 value 값이다. 값을 지정해준다면, 기본 값이 됨
+
+선택지 태그들에는 value 값을 지정해줘야 함.
+
+### HTML Entities 
+
+대괄호(tag와 혼동)나 특수 기호 등은 HTML entity(개체)를 통해 나타낸다.
+
+개체의 이름을 사용하여 `&entityName;`으로 나타내거나 `&#entitnyNumber;`으로 나타낸다.
+
+**자주 사용되는 것들**
+
+* `&lt;` `&gt;` : < >
+* `&quot;`: " 
+* `&amp;`: & 
+* `&npsp;`: non-breaking space, 여러 개의 공백 표현 가능.
+
+이름이 없는 놈들은 유니코드 번호를 사용하여 나타낸다.
+
+### div & span Tag
+
+특정 기능이 없고, HTML element들을 묶어서 레이아웃을 만들어 구조화 하는 태그
+
+non-semantic tag
+
+div: 인접 요소와 같은 줄에 있지 않는다.
+
+span: 인접 요소와 같은 줄에 있는다.
+
+단, 개발자의 편의에 따라 예약되지 않은 이름을 태그 이름이나 속성 이름, 속성 값에 사용할 수 있고, 이를 CSS, JS에서 활용 가능하다.
