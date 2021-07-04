@@ -68,4 +68,27 @@ text를 선(line)을 이용하여 꾸민다.
 * hsl: hsl(70, 100%, 40%) / hsla 가능 
 * currentColor: 글자 색 (초기 값)
 
-#### text-decoration-style 
+#### text-decoration-style
+
+text-decoration-line의 style을 구체화함 
+
+* solid: single line
+* double: double line
+* dotted: dotted line
+* dashed: dashed line(언더바)
+* wavy: wavy line 
+
+#### text-decoration-thickness 
+
+* auto: 브라우저가 자동으로 선택 
+* from-font: 폰트가 굵기 정보를 가지고 있다면 그것을 사용, 아니면 auto로 작용 
+* <length>
+* <percentage>
+
+### line-height
+
+줄 간격에 관한 속성. 100%는 1, 150%는 1.5 등으로 표현함 
+
+블록 요소에는 line box의 minimum height를 명시한다.
+
+또는 <length>,<percentage> 사용 가능
