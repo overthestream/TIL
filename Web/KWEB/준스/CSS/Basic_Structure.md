@@ -96,3 +96,36 @@ emphasized text 역시, 초록색으로 적용된다.
 ### inherit 키워드
 
 inheritance를 specify함 
+
+## Block vs Inline
+
+HTML element는 block 또는 Inline element로 분류된다.
+
+### Block-level elements
+
+container(부모 요소)의 수평,수직 공간을 모두 차지한다. 
+
+즉, block을 형성한다.
+
+항상 새로운 행에서 시작하며 가능한 full width를 차지한다. 
+
+단, width 속성으로 조절 가능.
+
+<body> element에만 나타난다. 
+
+### inline elements
+
+할당된 공간만 차지한다. 즉, 개행하지 않고, 필요한 너비만 차지한다.
+
+그러므로 width, height, margin-top, margin-bottom, padding 등이 불가능하다.
+
+예를 들어 <span>이나 <a>, <br> 등등
+
+div container를 사용하며 수평 정렬
+### Difference 
+
+block-level element는 다른 block element나 inline element를 포함할 수 있다. 즉, block element는 inline element보다 더 큰 구조를 만들 수 있다.
+
+block-element는 무조건 new line에서 시작하지만, inline은 이름 그대로, line 어디서든 시작 가능하다. 
+
+HTML5부터는 이러한 구분이 더 복잡하게 바뀌었다. inline은 phrasing으로 변경되었다. 
